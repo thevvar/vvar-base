@@ -1,0 +1,16 @@
+{
+  "game": {
+    "modelVersion": "0.1",
+    "arena": {
+      "sizeR": 32,
+      "sizeC": 32,
+      "arenaMap": [
+        {"r0c0": 0},
+        {"r1c0": 1},
+        {"r2c0": 2}
+      ]
+    },
+    "players": []
+
+  }
+}
