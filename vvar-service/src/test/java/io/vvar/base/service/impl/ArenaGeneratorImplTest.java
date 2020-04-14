@@ -5,12 +5,17 @@
 package io.vvar.base.service.impl;
 
 import io.vvar.base.model.Arena;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.vvar.base.model.ArenaCell;
+import io.vvar.base.model.Position;
+import io.vvar.base.model.type.Marker;
+import io.vvar.base.service.ArenaGenerator;
 import io.vvar.base.util.BattlegroundUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
 import java.util.Map;
 
@@ -22,14 +27,9 @@ public class ArenaGeneratorImplTest {
 
     private static final int TEST_SIZE_C = 88;
 
-    private static final int P1_STARTING_POSITION_R = 43;
+    private static final Position P1_STARTING_POSITION = new Position(43, 0);
 
-    private static final int P1_STARTING_POSITION_C = 0;
-
-    private static final int P2_STARTING_POSITION_R = 44;
-
-    private static final int P2_STARTING_POSITION_C = 87;
-
+    private static final Position P2_STARTING_POSITION = new Position(44, 87);
 
     @BeforeEach
     void init() {
@@ -41,17 +41,30 @@ public class ArenaGeneratorImplTest {
 
         Arena arena = test.generate();
 
+        // 1. Check if Arena created
         assertNotNull(arena);
+
+        // 2. Verify that no args method generates default size arena
         assertEquals(ArenaGeneratorImpl.defaultArenaSizeColumns, arena.getSizeC());
         assertEquals(ArenaGeneratorImpl.defaultArenaSizeRows, arena.getSizeR());
 
+        // 3. Make sure player starting positions properly initialized
         assertStartingPositions(arena.getStartingPositions(),
-                31, 0,
-                32, 63);
+                new Position(31, 0),
+                new Position(32, 63));
 
-        ArenaCell p1StartingCell = arena.getBattleGround()[arena.getStartingPositions().get("1r")][arena.getStartingPositions().get("1c")];
-
+        // 4. Verify that player starting positions properly added to the battlefield
+        Position p1Position = arena.getStartingPositions().get((char)1);
+        ArenaCell p1StartingCell = arena.getBattleGround()[p1Position.getRow()][p1Position.getColumn()];
         assertNotNull(p1StartingCell);
+        assertEquals(p1StartingCell.getMarker(), Marker.BASE);
+        assertEquals(p1StartingCell.getPlayer(), 1);
+
+        Position p2Position = arena.getStartingPositions().get((char)2);
+        ArenaCell p2StartingCell = arena.getBattleGround()[p2Position.getRow()][p2Position.getColumn()];
+        assertNotNull(p2StartingCell);
+        assertEquals(p2StartingCell.getMarker(), Marker.BASE);
+        assertEquals(p2StartingCell.getPlayer(), 2);
 
         System.out.println(BattlegroundUtils.battelgroundToString(arena));
     }
@@ -59,47 +72,39 @@ public class ArenaGeneratorImplTest {
     @Test
     void testGenerateStartingPositionsEven() {
 
-        Map<String, Integer> startingPositions = test.generateStartingPositions(TEST_SIZE_R, TEST_SIZE_C);
+        Map<Character, Position> startingPositions = test.generateStartingPositions(TEST_SIZE_R, TEST_SIZE_C);
 
-        assertStartingPositions(startingPositions,
-                P1_STARTING_POSITION_R, P1_STARTING_POSITION_C,
-                P2_STARTING_POSITION_R, P2_STARTING_POSITION_C);
+        assertStartingPositions(startingPositions, P1_STARTING_POSITION, P2_STARTING_POSITION);
 
     }
 
     @Test
     void testGenerateStartingPositionsOdd() {
 
-        Map<String, Integer> startingPositions = test.generateStartingPositions(TEST_SIZE_R+1,
-                TEST_SIZE_C+1);
+        Map<Character, Position> startingPositions = test.generateStartingPositions(TEST_SIZE_R + 1,
+                TEST_SIZE_C + 1);
 
         assertStartingPositions(startingPositions,
-                P1_STARTING_POSITION_R, P1_STARTING_POSITION_C,
-                P2_STARTING_POSITION_R+1, P2_STARTING_POSITION_C+1);
+                new Position(P1_STARTING_POSITION.getRow(), P1_STARTING_POSITION.getColumn()),
+                new Position (P2_STARTING_POSITION.getRow()+1, P2_STARTING_POSITION.getColumn()+1));
 
     }
 
-    private void assertStartingPositions(Map<String, Integer> startingPositions,
-                                        int p1StartingPositionR, int p1StartingPositionC,
-                                        int p2StartingPositionR, int p2StartingPositionC) {
+    private void assertStartingPositions(Map<Character, Position> startingPositions,
+                                         Position p1StartingPosition,
+                                         Position p2StartingPosition) {
 
         assertNotNull(startingPositions);
 
-        assertTrue(startingPositions.containsKey("1c"));
-        assertTrue(startingPositions.containsKey("2c"));
-        assertTrue(startingPositions.containsKey("1r"));
-        assertTrue(startingPositions.containsKey("2r"));
+        assertTrue(startingPositions.containsKey((char)1));
+        assertTrue(startingPositions.containsKey((char)2));
 
-        assertEquals(startingPositions.get("1r"),p1StartingPositionR);
-        assertEquals(startingPositions.get("1c"),p1StartingPositionC);
-        assertEquals(startingPositions.get("2r"),p2StartingPositionR);
-        assertEquals(startingPositions.get("2c"),p2StartingPositionC);
+        assertTrue(new ReflectionEquals(startingPositions.get((char)1)).matches(p1StartingPosition));
+        assertTrue(new ReflectionEquals(startingPositions.get((char)2)).matches(p2StartingPosition));
 
         System.out.println(startingPositions);
 
     }
-
-
 
 
 }

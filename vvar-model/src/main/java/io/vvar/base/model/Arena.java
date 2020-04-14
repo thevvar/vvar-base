@@ -16,7 +16,7 @@ public class Arena {
 
     private ArenaCell[][] battleGround;
 
-    private Map<String, Integer> startingPositions = new HashMap<>();
+    private Map<Character, Position> startingPositions = new HashMap<>();
 
 
     public Arena(int sizeR, int sizeC) {
@@ -43,11 +43,11 @@ public class Arena {
         this.battleGround = battleGround;
     }
 
-    public Map<String, Integer> getStartingPositions() {
+    public Map<Character, Position> getStartingPositions() {
         return startingPositions;
     }
 
-    public void setStartingPositions(Map<String, Integer> startingPositions) {
+    public void setStartingPositions(Map<Character, Position> startingPositions) {
         this.startingPositions = startingPositions;
     }
 }

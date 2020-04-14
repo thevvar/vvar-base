@@ -2,6 +2,7 @@ package io.vvar.base.util;
 
 import io.vvar.base.model.Arena;
 import io.vvar.base.model.ArenaCell;
+import io.vvar.base.model.type.Marker;
 
 public class BattlegroundUtils {
 
@@ -21,11 +22,33 @@ public class BattlegroundUtils {
 
         for (ArenaCell[] battleground:arena.getBattleGround()) {
             for (ArenaCell arenaCell:battleground) {
-                stringBuilder.append(arenaCell != null ? arenaCell.getMarker(): ANSI_WHITE+"."+ANSI_RESET);
+                stringBuilder.append(arenaCell != null ? colorCell(arenaCell): ".");
             }
             stringBuilder.append("\n");
         }
         return stringBuilder.toString();
     }
+
+    public static String colorCell(ArenaCell arenaCell) {
+
+        String colorCell;
+
+        switch (arenaCell.getPlayer()) {
+            case 1: {
+                colorCell = ANSI_GREEN+arenaCell.getMarker().byteValue+ANSI_RESET;
+                break;
+            }
+            case 2: {
+                colorCell = ANSI_RED+arenaCell.getMarker().byteValue+ANSI_RESET;
+                break;
+            }
+            default: {
+                colorCell = ""+arenaCell.getMarker().byteValue;
+            }
+        }
+
+        return colorCell;
+    }
+
 
 }

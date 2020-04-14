@@ -4,20 +4,14 @@
 
 package io.vvar.base.model;
 
+import io.vvar.base.model.type.Marker;
+
 /**
  * ArenaCell represents state of the cell
  *
  * player - symbol of a player in the current game who marked the cell: 'a','b','c' and so on.
  *
  * marker - code of the body part and direction where the player was moving:
- *
- *      0 - empty
- *      1 - body, was moving up
- *      2 - body, was moving down
- *      3 - body, was moving left
- *      4 - body, was moving right
- *      5 - head
- *      6 - base
  *
  */
 
@@ -26,7 +20,15 @@ public class ArenaCell {
 
     private char player;
 
-    private byte marker;
+    private Marker marker;
+
+    public ArenaCell() {
+    }
+
+    public ArenaCell(char player, Marker marker) {
+        this.player = player;
+        this.marker = marker;
+    }
 
     public char getPlayer() {
         return player;
@@ -36,11 +38,19 @@ public class ArenaCell {
         this.player = player;
     }
 
-    public byte getMarker() {
+    public Marker getMarker() {
         return marker;
     }
 
-    public void setMarker(byte marker) {
+    public void setMarker(Marker marker) {
         this.marker = marker;
+    }
+
+    @Override
+    public String toString() {
+        return "ArenaCell{" +
+                "player=" + player +
+                ", marker=" + marker +
+                '}';
     }
 }
