@@ -1,10 +1,10 @@
 package io.vvar.base.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Arena class defines size of the battlefield and current state of each cell
- *
- * 0 - empty
- *
  *
  *
  *
@@ -15,6 +15,9 @@ package io.vvar.base.model;
 public class Arena {
 
     private ArenaCell[][] battleGround;
+
+    private Map<String, Integer> startingPositions = new HashMap<>();
+
 
     public Arena(int sizeR, int sizeC) {
         battleGround = new ArenaCell[sizeR][sizeC];
@@ -38,5 +41,13 @@ public class Arena {
 
     public void setBattleGround(ArenaCell[][] battleGround) {
         this.battleGround = battleGround;
+    }
+
+    public Map<String, Integer> getStartingPositions() {
+        return startingPositions;
+    }
+
+    public void setStartingPositions(Map<String, Integer> startingPositions) {
+        this.startingPositions = startingPositions;
     }
 }
